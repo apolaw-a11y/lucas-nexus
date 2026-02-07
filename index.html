@@ -190,13 +190,15 @@
     </div>
 
     <script>
-        // Initialize Supabase (Values from our Setup)
+        // Initialize Supabase (Using window to prevent re-declaration issues)
         const supabaseUrl = 'https://dfezoyzuztglatfmmysr.supabase.co'
-        const supabaseKey = 'sb_publishable_sOO2RWlv_1M4VLWRo2w9cA_BJUc9fAL' // PUBLIC ANON KEY
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+        const supabaseKey = 'sb_publishable_sOO2RWlv_1M4VLWRo2w9cA_BJUc9fAL'
+        
+        // Define supabase client globally
+        window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
 
         // Auth State Listener
-        supabase.auth.onAuthStateChange((event, session) => {
+        window.supabaseClient.auth.onAuthStateChange((event, session) => {
             const authSection = document.getElementById('auth-section')
             const appInterface = document.getElementById('app-interface')
             const userInfo = document.getElementById('user-info')
@@ -217,7 +219,7 @@
             const email = document.getElementById('email-input').value
             if (!email) return alert('EMAIL REQUIRED')
             
-            const { data, error } = await supabase.auth.signInWithOtp({
+            const { data, error } = await window.supabaseClient.auth.signInWithOtp({
                 email: email,
                 options: {
                     emailRedirectTo: window.location.href
@@ -229,11 +231,11 @@
         }
 
         async function signOut() {
-            const { error } = await supabase.auth.signOut()
+            const { error } = await window.supabaseClient.auth.signOut()
         }
 
         async function fetchTodos() {
-            const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
                 .from('todos')
                 .select('*')
                 .order('id', { ascending: false })
@@ -247,7 +249,7 @@
             const task = input.value.trim()
             if (!task) return
 
-            const { data, error } = await supabase
+            const { data, error } = await window.supabaseClient
                 .from('todos')
                 .insert([{ task: task }])
                 .select()
@@ -262,7 +264,7 @@
         }
 
         async function deleteTodo(id) {
-            const { error } = await supabase
+            const { error } = await window.supabaseClient
                 .from('todos')
                 .delete()
                 .eq('id', id)
@@ -272,7 +274,7 @@
         }
 
         async function toggleTodo(id, currentStatus) {
-            const { error } = await supabase
+            const { error } = await window.supabaseClient
                 .from('todos')
                 .update({ is_complete: !currentStatus })
                 .eq('id', id)
