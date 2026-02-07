@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>Hello World // SYSTEM_LUCAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff00ff;
+            --bg-color: #050505;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -12,106 +21,136 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: #0f172a;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            font-family: 'Orbitron', sans-serif;
             color: white;
             overflow: hidden;
         }
-        
-        .background-glow {
+
+        /* Scanline effect */
+        body::after {
+            content: "";
             position: absolute;
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(99,102,241,0.25) 0%, rgba(168,85,247,0.1) 40%, rgba(15,23,42,0) 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 0;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
+            background-size: 100% 4px;
             pointer-events: none;
+            z-index: 10;
         }
 
-        .card {
+        .container {
             position: relative;
-            z-index: 1;
-            background: rgba(30, 41, 59, 0.6);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 32px;
-            padding: 60px 80px;
+            z-index: 2;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
-            max-width: 480px;
+            padding: 60px 80px;
+            border: 2px solid var(--neon-cyan);
+            background: rgba(5, 5, 5, 0.8);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2), inset 0 0 40px rgba(0, 243, 255, 0.1);
+            backdrop-filter: blur(10px);
+            clip-path: polygon(
+                0 0, 100% 0, 100% 85%, 95% 100%, 0 100%, 0 15%
+            );
         }
 
+        /* Glitch Text Effect */
         h1 {
-            margin: 0 0 20px 0;
-            font-size: 4rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-size: 5rem;
+            margin: 0;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: white;
+            text-shadow: 2px 2px var(--neon-pink), -2px -2px var(--neon-cyan);
+            animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+
+        h1::before, h1::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        h1::before {
+            left: 2px;
+            text-shadow: -1px 0 var(--neon-pink);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        h1::after {
+            left: -2px;
+            text-shadow: -1px 0 var(--neon-cyan);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
         }
 
         p {
-            font-size: 1.25rem;
-            line-height: 1.6;
-            color: #94a3b8;
-            margin: 0 0 40px 0;
-            font-weight: 400;
+            font-family: 'Share Tech Mono', monospace;
+            color: var(--neon-cyan);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
 
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 20px;
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            border-radius: 9999px;
-            color: #34d399;
-            font-size: 0.95rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-            transition: all 0.3s ease;
-        }
-        
-        .status-badge:hover {
-            background: rgba(16, 185, 129, 0.2);
-            transform: translateY(-1px);
+        .system-status {
+            margin-top: 40px;
+            display: inline-block;
+            border: 1px solid var(--neon-pink);
+            padding: 8px 24px;
+            color: var(--neon-pink);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.3);
+            position: relative;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: #34d399;
-            border-radius: 50%;
-            box-shadow: 0 0 12px #34d399;
-            animation: pulse 2s infinite;
+        .system-status::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--neon-pink);
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px var(--neon-pink);
         }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(52, 211, 153, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(12px, 9999px, 81px, 0); }
+            20% { clip: rect(68px, 9999px, 19px, 0); }
+            40% { clip: rect(3px, 9999px, 57px, 0); }
+            60% { clip: rect(89px, 9999px, 2px, 0); }
+            80% { clip: rect(24px, 9999px, 46px, 0); }
+            100% { clip: rect(55px, 9999px, 92px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 10px, 0); }
+            20% { clip: rect(2px, 9999px, 95px, 0); }
+            40% { clip: rect(33px, 9999px, 12px, 0); }
+            60% { clip: rect(12px, 9999px, 66px, 0); }
+            80% { clip: rect(87px, 9999px, 4px, 0); }
+            100% { clip: rect(45px, 9999px, 23px, 0); }
         }
     </style>
 </head>
 <body>
-    <div class="background-glow"></div>
-    <div class="card">
-        <h1>Hello<br>World</h1>
-        <p>
-            Private. Local. Secure.<br>
-            Designed for Lucas.
-        </p>
-        <div class="status-badge">
-            <div class="status-dot"></div>
-            <span>System Operational</span>
-        </div>
+    <div class="container">
+        <h1 data-text="HELLO WORLD">HELLO WORLD</h1>
+        <p>Designed for Lucas</p>
+        <div class="system-status">SYSTEM :: ONLINE</div>
     </div>
 </body>
 </html>
