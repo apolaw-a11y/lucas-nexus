@@ -14,6 +14,7 @@
             --primary-glow: rgba(14, 165, 233, 0.15);
             --accent: #f43f5e;
             --success: #22c55e;
+            --warning: #f59e0b;
             --bg: #0f172a;
             --bg-elevated: #1e293b;
             --bg-hover: #273548;
@@ -187,48 +188,6 @@
         }
 
         /* ===== Tasks Page ===== */
-        .task-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-
-        .task-input {
-            flex: 1;
-            padding: 12px 16px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-size: 0.95rem;
-            font-family: inherit;
-            outline: none;
-            transition: border-color var(--transition);
-        }
-
-        .task-input:focus {
-            border-color: var(--primary);
-        }
-
-        .task-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0 20px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: opacity var(--transition);
-            white-space: nowrap;
-        }
-
-        .btn-primary:hover { opacity: 0.85; }
-
         .task-list {
             list-style: none;
             display: flex;
@@ -256,12 +215,10 @@
             height: 20px;
             border: 2px solid var(--text-muted);
             border-radius: 4px;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: all var(--transition);
         }
 
         .task-item.completed .task-checkbox {
@@ -280,31 +237,11 @@
             flex: 1;
             font-size: 0.9rem;
             line-height: 1.5;
-            cursor: pointer;
         }
 
         .task-item.completed .task-text {
             color: var(--text-muted);
             text-decoration: line-through;
-        }
-
-        .task-delete {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px;
-            font-size: 1.1rem;
-            transition: color var(--transition);
-            opacity: 0;
-        }
-
-        .task-item:hover .task-delete {
-            opacity: 1;
-        }
-
-        .task-delete:hover {
-            color: var(--accent);
         }
 
         .task-empty {
@@ -374,6 +311,33 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timeline-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 99px;
+            line-height: 1.4;
+        }
+
+        .timeline-badge.cat-system {
+            background: rgba(14, 165, 233, 0.15);
+            color: #38bdf8;
+        }
+
+        .timeline-badge.cat-web {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .timeline-badge.cat-decision {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
         }
 
         .timeline-content {
@@ -402,12 +366,6 @@
             font-size: 0.9rem;
         }
 
-        .timeline-add-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-
         /* ===== Responsive ===== */
         @media (max-width: 480px) {
             .home-grid {
@@ -425,99 +383,70 @@
     <!-- Header -->
     <header class="app-header">
         <a class="app-logo" href="#/" onclick="Router.go('/')">LUCAS NEXUS</a>
-        <span class="app-badge" id="mode-badge">LOCAL</span>
+        <span class="app-badge" id="mode-badge">MONITOR</span>
     </header>
 
     <!-- SPA Mount Point -->
     <main id="app"></main>
 
     <!-- Footer -->
-    <footer class="app-footer">LUCAS NEXUS v2 &mdash; Built with discipline.</footer>
+    <footer class="app-footer">LUCAS NEXUS v2 &mdash; Read-only Monitor Mode.</footer>
 
     <script>
     /* =========================================================
-       DATA SERVICE — Abstract layer (localStorage now, Supabase later)
+       DATA SERVICE — Read-only monitor layer
        ========================================================= */
     const DataService = (() => {
         const STORAGE_KEY = 'nexus_data';
+        const DATA_VERSION = 2;
 
-        // Default data structure
+        const CATEGORY_MAP = {
+            '系統技能': 'cat-system',
+            '網站開發': 'cat-web',
+            '核心決策': 'cat-decision',
+        };
+
         const DEFAULT_DATA = {
+            version: DATA_VERSION,
             tasks: [
-                { id: 1, text: '完成 NEXUS v2 首頁設計', done: false, created: '2026-02-08' },
-                { id: 2, text: '建立任務清單 CRUD 功能', done: false, created: '2026-02-08' },
-                { id: 3, text: '設計成長時間軸介面', done: false, created: '2026-02-08' },
+                { id: 1, text: '完成 NEXUS v2 首頁設計', done: true, created: '2026-02-08' },
+                { id: 2, text: '建立任務清單 CRUD 功能', done: true, created: '2026-02-08' },
+                { id: 3, text: '設計成長時間軸介面', done: true, created: '2026-02-08' },
             ],
             timeline: [
-                { id: 1, date: '2026-02-08', title: 'NEXUS v2 啟動', desc: '重新設計系統架構，建立 SPA 基礎結構。' },
+                { id: 7, date: '2026-02-08', category: '核心決策', title: '開發方針', desc: '正式確立「專案經理(小賈) + 首席工程師(Claude)」合作模式。' },
+                { id: 6, date: '2026-02-08', category: '系統技能', title: '指令指揮官', desc: '解鎖「召喚 Claude Code」技能，實現高效開發協作。' },
+                { id: 5, date: '2026-02-08', category: '核心決策', title: '穩定性躍進', desc: '實作 Collect Mode，優化配額管理。' },
+                { id: 4, date: '2026-02-07', category: '網站開發', title: 'Nexus 基地台', desc: 'Lucas Nexus v1.0 上線 (GitHub Pages)。' },
+                { id: 3, date: '2026-02-04', category: '系統技能', title: '通訊整合', desc: '整合 LINE Webhook，具備發送通知能力。' },
+                { id: 2, date: '2026-02-03', category: '系統技能', title: '自動化首勝', desc: '學會透過瀏覽器建立 Google 行事曆。' },
+                { id: 1, date: '2026-02-02', category: '系統技能', title: '數位精靈覺醒', desc: 'Lucas 賦予我「小賈」之名。' },
             ]
         };
 
         function load() {
             const raw = localStorage.getItem(STORAGE_KEY);
-            return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_DATA));
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed.version === DATA_VERSION) return parsed;
+            }
+            const data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+            save(data);
+            return data;
         }
 
         function save(data) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
-        // --- Tasks ---
         function getTasks() { return load().tasks; }
-
-        function addTask(text) {
-            const data = load();
-            const task = {
-                id: Date.now(),
-                text,
-                done: false,
-                created: new Date().toISOString().slice(0, 10)
-            };
-            data.tasks.unshift(task);
-            save(data);
-            return task;
-        }
-
-        function toggleTask(id) {
-            const data = load();
-            const t = data.tasks.find(t => t.id === id);
-            if (t) t.done = !t.done;
-            save(data);
-        }
-
-        function deleteTask(id) {
-            const data = load();
-            data.tasks = data.tasks.filter(t => t.id !== id);
-            save(data);
-        }
-
-        // --- Timeline ---
         function getTimeline() { return load().timeline; }
 
-        function addTimelineEntry(title, desc) {
-            const data = load();
-            const entry = {
-                id: Date.now(),
-                date: new Date().toISOString().slice(0, 10),
-                title,
-                desc
-            };
-            data.timeline.unshift(entry);
-            save(data);
-            return entry;
+        function getCategoryClass(category) {
+            return CATEGORY_MAP[category] || 'cat-system';
         }
 
-        function deleteTimelineEntry(id) {
-            const data = load();
-            data.timeline = data.timeline.filter(e => e.id !== id);
-            save(data);
-        }
-
-        // Public API — same interface for future Supabase swap
-        return {
-            getTasks, addTask, toggleTask, deleteTask,
-            getTimeline, addTimelineEntry, deleteTimelineEntry
-        };
+        return { getTasks, getTimeline, getCategoryClass };
     })();
 
     /* =========================================================
@@ -533,37 +462,36 @@
 
         return `
             <div class="home-greeting">Hey, Lucas.</div>
-            <p class="home-subtitle">準備好今天要推進什麼了嗎？</p>
+            <p class="home-subtitle">小賈的成長紀錄，持續監控中。</p>
             <div class="home-grid">
                 <a class="home-card" href="#/tasks" onclick="Router.go('/tasks')">
                     <div class="home-card-icon">&#9776;</div>
                     <div class="home-card-title">任務清單</div>
-                    <div class="home-card-desc">管理每日目標與待辦事項</div>
+                    <div class="home-card-desc">查看目標與完成狀態</div>
                     <div class="home-card-count">${pending} 項待完成 / ${done} 項已完成</div>
                 </a>
                 <a class="home-card" href="#/timeline" onclick="Router.go('/timeline')">
                     <div class="home-card-icon">&#9202;</div>
                     <div class="home-card-title">成長時間軸</div>
-                    <div class="home-card-desc">記錄里程碑與學習歷程</div>
+                    <div class="home-card-desc">里程碑與技能解鎖紀錄</div>
                     <div class="home-card-count">${timeline.length} 筆紀錄</div>
                 </a>
             </div>
         `;
     }
 
-    // --- Tasks ---
+    // --- Tasks (Read-only) ---
     function renderTasks() {
         const tasks = DataService.getTasks();
         const pending = tasks.filter(t => !t.done).length;
         const done = tasks.filter(t => t.done).length;
 
         const listHTML = tasks.length === 0
-            ? '<div class="task-empty">還沒有任何任務，新增一個吧！</div>'
+            ? '<div class="task-empty">目前沒有任務紀錄。</div>'
             : `<ul class="task-list">${tasks.map(t => `
                 <li class="task-item${t.done ? ' completed' : ''}">
-                    <div class="task-checkbox" onclick="TaskActions.toggle(${t.id})"></div>
-                    <span class="task-text" onclick="TaskActions.toggle(${t.id})">${escapeHTML(t.text)}</span>
-                    <button class="task-delete" onclick="TaskActions.remove(${t.id})" title="刪除">&times;</button>
+                    <div class="task-checkbox"></div>
+                    <span class="task-text">${escapeHTML(t.text)}</span>
                 </li>
               `).join('')}</ul>`;
 
@@ -571,10 +499,6 @@
             <div class="page-header">
                 <button class="back-btn" onclick="Router.go('/')">&larr;</button>
                 <span class="page-title">任務清單</span>
-            </div>
-            <div class="task-input-group">
-                <input class="task-input" type="text" id="task-input" placeholder="新增任務..." onkeydown="if(event.key==='Enter')TaskActions.add()">
-                <button class="btn-primary" onclick="TaskActions.add()">新增</button>
             </div>
             <div class="task-stats">
                 <span><span class="stat-dot pending"></span> ${pending} 待完成</span>
@@ -584,35 +508,19 @@
         `;
     }
 
-    const TaskActions = {
-        add() {
-            const input = document.getElementById('task-input');
-            const text = input.value.trim();
-            if (!text) return;
-            DataService.addTask(text);
-            Router.render();
-            setTimeout(() => document.getElementById('task-input')?.focus(), 0);
-        },
-        toggle(id) {
-            DataService.toggleTask(id);
-            Router.render();
-        },
-        remove(id) {
-            DataService.deleteTask(id);
-            Router.render();
-        }
-    };
-
-    // --- Timeline ---
+    // --- Timeline (Read-only with Category Badges) ---
     function renderTimeline() {
         const entries = DataService.getTimeline();
 
         const listHTML = entries.length === 0
-            ? '<div class="timeline-empty">還沒有紀錄。新增第一筆里程碑吧！</div>'
+            ? '<div class="timeline-empty">還沒有紀錄。</div>'
             : `<div class="timeline-container">${entries.map(e => `
                 <div class="timeline-item">
                     <div class="timeline-dot"></div>
-                    <div class="timeline-date">${e.date}</div>
+                    <div class="timeline-date">
+                        ${e.date}
+                        ${e.category ? `<span class="timeline-badge ${DataService.getCategoryClass(e.category)}">${escapeHTML(e.category)}</span>` : ''}
+                    </div>
                     <div class="timeline-content">
                         <div class="timeline-title">${escapeHTML(e.title)}</div>
                         <div class="timeline-desc">${escapeHTML(e.desc)}</div>
@@ -625,28 +533,9 @@
                 <button class="back-btn" onclick="Router.go('/')">&larr;</button>
                 <span class="page-title">成長時間軸</span>
             </div>
-            <div class="timeline-add-group">
-                <input class="task-input" type="text" id="tl-title" placeholder="標題（例：學會 Git）" style="flex:1" onkeydown="if(event.key==='Enter')document.getElementById('tl-desc').focus()">
-                <button class="btn-primary" onclick="TimelineActions.add()">新增</button>
-            </div>
-            <div style="margin-bottom:24px;">
-                <input class="task-input" type="text" id="tl-desc" placeholder="描述（選填）" style="width:100%" onkeydown="if(event.key==='Enter')TimelineActions.add()">
-            </div>
             ${listHTML}
         `;
     }
-
-    const TimelineActions = {
-        add() {
-            const titleEl = document.getElementById('tl-title');
-            const descEl = document.getElementById('tl-desc');
-            const title = titleEl.value.trim();
-            if (!title) return;
-            DataService.addTimelineEntry(title, descEl.value.trim());
-            Router.render();
-            setTimeout(() => document.getElementById('tl-title')?.focus(), 0);
-        }
-    };
 
     /* =========================================================
        ROUTER — Hash-based SPA routing
@@ -672,9 +561,7 @@
             location.hash = '#' + path;
         }
 
-        // Listen for hash changes
         window.addEventListener('hashchange', render);
-
         return { render, go };
     })();
 
