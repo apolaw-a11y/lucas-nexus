@@ -170,18 +170,8 @@
     </div>
 
     <div class="container">
-        <!-- Auth Section -->
-        <div id="auth-section" class="auth-container">
-            <p>ACCESS RESTRICTED. IDENTIFICATION REQUIRED.</p>
-            <input type="email" id="email-input" placeholder="ENTER_EMAIL_ADDRESS" style="margin-bottom: 10px;">
-            <button onclick="signIn()">SEND MAGIC LINK</button>
-        </div>
-
-        <!-- App Interface -->
-        <div id="app-interface">
-            <div style="text-align: right; margin-bottom: 10px;">
-                <button onclick="signOut()" style="font-size: 0.8rem; padding: 5px 10px;">LOGOUT</button>
-            </div>
+        <!-- App Interface (No Auth Required) -->
+        <div id="app-interface" style="display: block;">
             <input type="text" id="new-task" placeholder="INPUT NEW DIRECTIVE..." onkeypress="handleEnter(event)">
             <ul id="todo-list">
                 <!-- Tasks will appear here -->
@@ -190,49 +180,15 @@
     </div>
 
     <script>
-        // Initialize Supabase (Using window to prevent re-declaration issues)
+        // Initialize Supabase (Values from our Setup)
         const supabaseUrl = 'https://dfezoyzuztglatfmmysr.supabase.co'
         const supabaseKey = 'sb_publishable_sOO2RWlv_1M4VLWRo2w9cA_BJUc9fAL'
         
         // Define supabase client globally
         window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
 
-        // Auth State Listener
-        window.supabaseClient.auth.onAuthStateChange((event, session) => {
-            const authSection = document.getElementById('auth-section')
-            const appInterface = document.getElementById('app-interface')
-            const userInfo = document.getElementById('user-info')
-
-            if (session) {
-                authSection.style.display = 'none'
-                appInterface.style.display = 'block'
-                userInfo.innerText = 'OPERATOR: ' + session.user.email
-                fetchTodos()
-            } else {
-                authSection.style.display = 'block'
-                appInterface.style.display = 'none'
-                userInfo.innerText = 'SYSTEM: GUEST'
-            }
-        })
-
-        async function signIn() {
-            const email = document.getElementById('email-input').value
-            if (!email) return alert('EMAIL REQUIRED')
-            
-            const { data, error } = await window.supabaseClient.auth.signInWithOtp({
-                email: email,
-                options: {
-                    emailRedirectTo: window.location.href
-                }
-            })
-            
-            if (error) alert('ERROR: ' + error.message)
-            else alert('LINK SENT. CHECK YOUR INBOX.')
-        }
-
-        async function signOut() {
-            const { error } = await window.supabaseClient.auth.signOut()
-        }
+        // Fetch todos immediately
+        fetchTodos()
 
         async function fetchTodos() {
             const { data, error } = await window.supabaseClient
