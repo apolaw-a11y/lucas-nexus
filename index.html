@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUCAS NEXUS // LOCAL_MODE</title>
+    <title>LUCAS NEXUS // 任務中控台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-cyan: #00f3ff;
-            --neon-pink: #ff00ff;
-            --bg-color: #050505;
-            --glass: rgba(10, 10, 10, 0.7);
+            --primary: #0ea5e9;    /* Sky Blue */
+            --accent: #f43f5e;     /* Rose Red */
+            --bg-color: #0f172a;   /* Slate 900 */
+            --card-bg: #1e293b;    /* Slate 800 */
+            --text-main: #f8fafc;  /* Slate 50 */
+            --text-muted: #94a3b8; /* Slate 400 */
         }
 
         body {
@@ -20,160 +22,182 @@
             padding: 0;
             min-height: 100vh;
             background-color: var(--bg-color);
-            background-image: 
-                linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
-            font-family: 'Share Tech Mono', monospace;
-            color: white;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* Scanline */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 999;
-        }
-
         .header {
             width: 100%;
-            padding: 20px;
+            max-width: 600px;
+            padding: 40px 20px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--neon-cyan);
-            background: var(--glass);
-            backdrop-filter: blur(5px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            color: var(--neon-cyan);
+            color: var(--primary);
             margin: 0;
             font-size: 1.5rem;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px solid #334155;
+            padding: 4px 10px;
+            border-radius: 99px;
+            background: rgba(255,255,255,0.05);
         }
 
         .container {
-            width: 90%;
-            max-width: 600px;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-
-        button {
-            background: transparent;
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 10px 20px;
-            font-family: 'Orbitron', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            box-shadow: 0 0 5px var(--neon-cyan);
-        }
-
-        button:hover {
-            background: var(--neon-cyan);
-            color: black;
-            box-shadow: 0 0 20px var(--neon-cyan);
-        }
-
-        input[type="text"] {
             width: 100%;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--neon-pink);
-            color: white;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1.1rem;
-            outline: none;
-            margin-bottom: 20px;
+            max-width: 600px;
+            padding: 0 20px;
             box-sizing: border-box;
         }
 
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 16px;
+            background: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
         input[type="text"]:focus {
-            box-shadow: 0 0 10px var(--neon-pink);
+            border-color: var(--primary);
+        }
+
+        button.add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button.add-btn:hover {
+            opacity: 0.9;
         }
 
         ul {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         li {
-            background: rgba(20, 20, 20, 0.8);
-            border-left: 3px solid var(--neon-cyan);
-            padding: 15px;
-            margin-bottom: 10px;
+            background: var(--card-bg);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 8px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: transform 0.2s;
         }
 
         li:hover {
-            transform: translateX(5px);
-            background: rgba(30, 30, 30, 0.9);
+            transform: translateY(-2px);
         }
 
-        li.completed {
-            border-left-color: #333;
-            opacity: 0.5;
+        li.completed span {
+            color: var(--text-muted);
             text-decoration: line-through;
         }
 
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--text-muted);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        li.completed .checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        li.completed .checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        span.task-text {
+            flex-grow: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
         .delete-btn {
-            border-color: var(--neon-pink);
-            color: var(--neon-pink);
-            padding: 5px 10px;
-            font-size: 0.8rem;
-            box-shadow: none;
+            background: transparent;
+            border: none;
+            color: #475569;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.2rem;
+            transition: color 0.2s;
         }
 
         .delete-btn:hover {
-            background: var(--neon-pink);
-            color: white;
-            box-shadow: 0 0 10px var(--neon-pink);
+            color: var(--accent);
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>LUCAS_NEXUS //</h1>
-        <div>SYSTEM: LOCAL_STORAGE</div>
+        <h1>LUCAS NEXUS //</h1>
+        <div class="status-badge">本地儲存模式</div>
     </div>
 
     <div class="container">
-        <input type="text" id="new-task" placeholder="INPUT NEW DIRECTIVE..." onkeypress="handleEnter(event)">
+        <div class="input-group">
+            <input type="text" id="new-task" placeholder="輸入新任務..." onkeypress="handleEnter(event)">
+            <button class="add-btn" onclick="addTodo()">新增</button>
+        </div>
+
         <ul id="todo-list">
             <!-- Tasks will appear here -->
         </ul>
     </div>
 
     <script>
-        // Initial Data (Default Directives)
+        // 預設資料 (中文化)
         const DEFAULT_TODOS = [
-            { id: 1, task: "[Auth] Re-enable Email Magic Link (Wait for Rate Limit)", is_complete: false },
-            { id: 2, task: "[Auth] Verify RLS Security Policies", is_complete: false },
-            { id: 3, task: "[Feature] Implement Timeline Module (Growth History)", is_complete: false },
-            { id: 4, task: "[Auth] Enable Google OAuth Login (GCP Setup)", is_complete: false },
-            { id: 5, task: "[Tech] Evaluate Framework Migration (Vite+React)", is_complete: false }
+            { id: 1, task: "[權限] 重新啟用 Email 登入 (等待限制解除)", is_complete: false },
+            { id: 2, task: "[權限] 驗證 RLS 資料庫安全規則", is_complete: false },
+            { id: 3, task: "[功能] 開發時間軸模組 (成長歷史)", is_complete: false },
+            { id: 4, task: "[權限] 啟用 Google 帳號登入 (GCP 設定)", is_complete: false },
+            { id: 5, task: "[技術] 評估遷移至 Vite+React 框架", is_complete: false }
         ]
 
         // Load from LocalStorage or use Default
@@ -221,10 +245,9 @@
                 if (todo.is_complete) li.classList.add('completed')
                 
                 li.innerHTML = `
-                    <span onclick="toggleTodo(${todo.id})" style="cursor:pointer; flex-grow:1">
-                        [${todo.is_complete ? 'X' : ' '}] ${todo.task}
-                    </span>
-                    <button class="delete-btn" onclick="deleteTodo(${todo.id})">TERMINATE</button>
+                    <div class="checkbox" onclick="toggleTodo(${todo.id})"></div>
+                    <span class="task-text" onclick="toggleTodo(${todo.id})">${todo.task}</span>
+                    <button class="delete-btn" onclick="deleteTodo(${todo.id})" title="刪除">×</button>
                 `
                 list.appendChild(li)
             })
