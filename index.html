@@ -275,88 +275,131 @@
         .stat-dot.pending { background: var(--primary); }
         .stat-dot.done { background: var(--success); }
 
-        /* ===== Timeline Page ===== */
-        .timeline-container {
-            position: relative;
-            padding-left: 28px;
+        /* ===== Timeline Page (Multi-lane + Filters) ===== */
+        .timeline-layout {
+            display: flex;
+            gap: 16px;
         }
 
-        .timeline-container::before {
-            content: '';
+        .timeline-filters {
+            width: 200px;
+            border-right: 1px solid var(--border);
+            padding-right: 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .timeline-filters input[type="text"],
+        .timeline-filters input[type="date"] {
+            width: 100%;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.8rem;
+        }
+
+        .timeline-filters label {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .timeline-filter-block {
+            margin-bottom: 6px;
+        }
+
+        .timeline-filter-block h4 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+
+        .timeline-filter-categories label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+        }
+
+        .timeline-main {
+            flex: 1;
+            position: relative;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+
+        .timeline-years {
+            position: relative;
+            height: 18px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-year-marker {
             position: absolute;
-            left: 8px;
             top: 0;
-            bottom: 0;
-            width: 2px;
-            background: var(--border);
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
-        .timeline-item {
+        .timeline-lanes {
             position: relative;
-            margin-bottom: 24px;
+        }
+
+        .timeline-lane {
+            margin-bottom: 16px;
+        }
+
+        .timeline-lane-label {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+
+        .timeline-lane-line {
+            position: relative;
+            height: 28px;
+            border-bottom: 1px solid var(--border);
         }
 
         .timeline-dot {
             position: absolute;
-            left: -24px;
-            top: 4px;
-            width: 12px;
-            height: 12px;
+            bottom: -4px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: var(--primary);
-            border: 2px solid var(--bg);
+            cursor: pointer;
         }
 
-        .timeline-date {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .timeline-dot:hover {
+            background: #38bdf8;
         }
 
-        .timeline-badge {
-            display: inline-block;
-            font-size: 0.65rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 99px;
-            line-height: 1.4;
-        }
-
-        .timeline-badge.cat-system {
-            background: rgba(14, 165, 233, 0.15);
-            color: #38bdf8;
-        }
-
-        .timeline-badge.cat-web {
-            background: rgba(34, 197, 94, 0.15);
-            color: #4ade80;
-        }
-
-        .timeline-badge.cat-decision {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-        }
-
-        .timeline-content {
-            background: var(--bg-elevated);
+        .timeline-tooltip {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            background: #020617;
+            color: var(--text);
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            border-radius: 4px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 14px 16px;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .timeline-title {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-        }
-
-        .timeline-desc {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            line-height: 1.5;
+        .timeline-dot:hover .timeline-tooltip {
+            opacity: 1;
         }
 
         .timeline-empty {
@@ -364,6 +407,62 @@
             padding: 40px 0;
             color: var(--text-muted);
             font-size: 0.9rem;
+        }
+
+        .timeline-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.72);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .timeline-modal {
+            background: var(--bg-elevated);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            max-width: 420px;
+            width: calc(100% - 40px);
+            padding: 16px 18px;
+            position: relative;
+            font-size: 0.85rem;
+        }
+
+        .timeline-modal-close {
+            position: absolute;
+            right: 10px;
+            top: 8px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .timeline-modal-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-modal-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .timeline-modal-detail {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .timeline-modal-tags {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
         }
 
         /* ===== Responsive ===== */
@@ -508,33 +607,204 @@
         `;
     }
 
-    // --- Timeline (Read-only with Category Badges) ---
+    // --- Timeline (Multi-lane + Filters) ---
     function renderTimeline() {
         const entries = DataService.getTimeline();
 
-        const listHTML = entries.length === 0
-            ? '<div class="timeline-empty">還沒有紀錄。</div>'
-            : `<div class="timeline-container">${entries.map(e => `
-                <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-date">
-                        ${e.date}
-                        ${e.category ? `<span class="timeline-badge ${DataService.getCategoryClass(e.category)}">${escapeHTML(e.category)}</span>` : ''}
-                    </div>
-                    <div class="timeline-content">
-                        <div class="timeline-title">${escapeHTML(e.title)}</div>
-                        <div class="timeline-desc">${escapeHTML(e.desc)}</div>
-                    </div>
+        if (entries.length === 0) {
+            return `
+                <div class="page-header">
+                    <button class="back-btn" onclick="Router.go('/')">&larr;</button>
+                    <span class="page-title">成長時間軸</span>
                 </div>
-              `).join('')}</div>`;
+                <div class="timeline-empty">還沒有紀錄。</div>
+            `;
+        }
 
-        return `
+        const categories = [
+            { key: '系統技能', label: '系統技能 / System' },
+            { key: '網站開發', label: '網站開發 / Web' },
+            { key: '核心決策', label: '核心決策 / Decision' },
+        ];
+
+        const dates = entries.map(e => new Date(e.date));
+        const minYear = Math.min(...dates.map(d => d.getFullYear())) - 1;
+        const maxYear = Math.max(...dates.map(d => d.getFullYear())) + 1;
+
+        function dateToPercent(dateStr) {
+            const d = new Date(dateStr);
+            const total = maxYear - minYear;
+            const pos = d.getFullYear() + d.getMonth() / 12 - minYear;
+            return (pos / total) * 100;
+        }
+
+        const yearsHTML = Array.from({ length: maxYear - minYear + 1 }).map((_, i) => {
+            const year = minYear + i;
+            const left = ((year - minYear) / (maxYear - minYear)) * 100;
+            return `<span class="timeline-year-marker" style="left:${left}%">${year}</span>`;
+        }).join('');
+
+        const lanesHTML = categories.map(cat => {
+            const catEntries = entries
+                .filter(e => e.category === cat.key)
+                .sort((a, b) => a.date < b.date ? -1 : 1);
+            if (!catEntries.length) return '';
+
+            const dotsHTML = catEntries.map(e => `
+                <div class="timeline-dot" style="left:${dateToPercent(e.date)}%" data-id="${e.id}">
+                    <div class="timeline-tooltip">${e.date} · ${escapeHTML(e.title)}</div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="timeline-lane">
+                    <div class="timeline-lane-label">${cat.label}</div>
+                    <div class="timeline-lane-line">${dotsHTML}</div>
+                </div>
+            `;
+        }).join('');
+
+        const html = `
             <div class="page-header">
                 <button class="back-btn" onclick="Router.go('/')">&larr;</button>
                 <span class="page-title">成長時間軸</span>
             </div>
-            ${listHTML}
+            <div class="timeline-layout">
+                <aside class="timeline-filters">
+                    <div class="timeline-filter-block">
+                        <h4>關鍵字</h4>
+                        <input id="timeline-search" type="text" placeholder="搜尋標題或描述…" />
+                    </div>
+                    <div class="timeline-filter-block">
+                        <h4>時間範圍</h4>
+                        <label>起</label>
+                        <input id="timeline-start" type="date" />
+                        <label>迄</label>
+                        <input id="timeline-end" type="date" />
+                    </div>
+                    <div class="timeline-filter-block">
+                        <h4>類別</h4>
+                        <div class="timeline-filter-categories" id="timeline-cat-filters"></div>
+                    </div>
+                </aside>
+                <section class="timeline-main">
+                    <div class="timeline-years">${yearsHTML}</div>
+                    <div class="timeline-lanes">${lanesHTML}</div>
+                </section>
+            </div>
         `;
+
+        // 掛載後注入互動
+        setTimeout(() => setupTimelineInteractions(entries, categories, { minYear, maxYear }), 0);
+        return html;
+    }
+
+    /* =========================================================
+       Timeline Interactions
+       ========================================================= */
+    function setupTimelineInteractions(entries, categories, range) {
+        const searchInput = document.getElementById('timeline-search');
+        const startInput = document.getElementById('timeline-start');
+        const endInput = document.getElementById('timeline-end');
+        const catContainer = document.getElementById('timeline-cat-filters');
+
+        if (!searchInput || !catContainer) return;
+
+        const state = {
+            search: '',
+            start: '',
+            end: '',
+            cats: new Set(categories.map(c => c.key)),
+        };
+
+        function applyFilters() {
+            const dots = document.querySelectorAll('.timeline-dot');
+            const filtered = entries.filter(e => {
+                if (!state.cats.has(e.category)) return false;
+                if (state.start && e.date < state.start) return false;
+                if (state.end && e.date > state.end) return false;
+                if (state.search) {
+                    const text = (e.title || '') + (e.desc || '');
+                    if (!text.toLowerCase().includes(state.search)) return false;
+                }
+                return true;
+            });
+
+            const visibleIds = new Set(filtered.map(e => String(e.id)));
+            dots.forEach(dot => {
+                const id = dot.getAttribute('data-id');
+                dot.style.opacity = visibleIds.has(id) ? '1' : '0.18';
+            });
+        }
+
+        // 類別勾選
+        categories.forEach(cat => {
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = true;
+            checkbox.value = cat.key;
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) state.cats.add(cat.key);
+                else state.cats.delete(cat.key);
+                applyFilters();
+            });
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(' ' + cat.label));
+            catContainer.appendChild(label);
+        });
+
+        searchInput.addEventListener('input', () => {
+            state.search = searchInput.value.toLowerCase();
+            applyFilters();
+        });
+
+        if (startInput) startInput.addEventListener('change', () => {
+            state.start = startInput.value;
+            applyFilters();
+        });
+
+        if (endInput) endInput.addEventListener('change', () => {
+            state.end = endInput.value;
+            applyFilters();
+        });
+
+        // 點擊節點顯示細節
+        const dots = document.querySelectorAll('.timeline-dot');
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const id = dot.getAttribute('data-id');
+                const ev = entries.find(e => String(e.id) === id);
+                if (!ev) return;
+
+                const badgeClass = DataService.getCategoryClass(ev.category);
+                const tagsText = ev.tags && ev.tags.length ? `標籤：${ev.tags.join(', ')}` : '';
+
+                const backdrop = document.createElement('div');
+                backdrop.className = 'timeline-modal-backdrop';
+                backdrop.innerHTML = `
+                    <div class="timeline-modal">
+                        <button class="timeline-modal-close" aria-label="關閉">×</button>
+                        <div class="timeline-modal-title">${escapeHTML(ev.title)}</div>
+                        <div class="timeline-modal-meta">
+                            ${ev.date} · <span class="timeline-badge ${badgeClass}">${escapeHTML(ev.category)}</span>
+                        </div>
+                        <div class="timeline-modal-detail">${escapeHTML(ev.desc || '')}</div>
+                        ${tagsText ? `<div class="timeline-modal-tags">${escapeHTML(tagsText)}</div>` : ''}
+                    </div>
+                `;
+
+                document.body.appendChild(backdrop);
+
+                const closeBtn = backdrop.querySelector('.timeline-modal-close');
+                closeBtn.addEventListener('click', () => backdrop.remove());
+                backdrop.addEventListener('click', (e) => {
+                    if (e.target === backdrop) backdrop.remove();
+                });
+            });
+        });
+
+        applyFilters();
     }
 
     /* =========================================================
